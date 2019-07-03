@@ -119,7 +119,7 @@ Github
 	git branch --set-upstream-to=origin/远程分支名称 本地分支名称
 
 10 从远程分支上拉取代码
-	git pull origin 分支名
+	git pull origin 本地分支名
 
 11 推送分支
-	git push origin 分支名
+	git push origin 本地分支名
