@@ -1,0 +1,113 @@
+迭代
+	迭代是访问集合元素的一种方式 
+
+迭代器
+	迭代器是一个可以记住遍历位置的对象 迭代器对象从集合的第一个元素开始访问 直到所有元素被访问结束 迭代器只能往前不会后退
+
+自定义迭代对象
+class ClassMate(object):
+	def __init__(self):
+		self.names = list()
+	def add(self, temp):
+		self.names.append(temp)
+	def __iter__(self):
+		return ClassIterator(self)
+
+class ClassIterator(object, obj):
+	def __init__(self, obj):
+		self.obj = obj
+		self.current = 0
+	def __iter__(self):
+		pass
+	def __next__(self):
+		if self.current > len(slef.obj.names):
+			ret = self.obj.names[self.current]
+			self.current += 1
+			return ret
+		else:
+			raise StopIteration
+
+iterable ---> 是否可迭代：能通过for in语句循环遍历的都是可迭代(只要实现了__iter__方法的则为可迭代)
+
+	**判断是否可以迭代
+		from collections import Iterable
+		isinstance(obj, Iterable)
+		如果返回True则是可迭代
+
+iterator ---> 迭代器：对象中只要实现了__iter__ 和 __next__方法的对象则为迭代器
+	**判断是否迭代器
+		from collections import Iterator
+		isinstance(obj, Iterator)
+		如果返回True则是迭代器
+
+重点：
+	for temp in temps：
+		pass
+
+	for 语句执行的过程
+	1、判断temps是否可迭代
+	2、在1条件成立的情况下 调用iter方法 iter方法会自动调用对象中的__iter__方法 若返回是一个迭代器 则成功
+
+自定义迭代对象改善：
+class ClassMate(object):
+	def __init__(self):
+		self.names = list()
+		self.current = 0
+
+	def add(self, temp):
+		self.names.append(temp)
+
+	def __iter__(self):
+		return self
+
+	def __next__(self):
+		if self.current > len(self.names):
+			ret = self.obj.names[self.current]
+			self.current += 1
+			return ret
+		else:
+			raise StopIteration
+
+**迭代器一定是可迭代的 but 可迭代对象不一定是迭代器
+
+面试题：
+	python2中range和xrange的区别
+	range返回一个列表 列表中保存所有值 占用大量空间
+	xrange返回一个迭代器 保存生成值的方式 每调用一次 生成一个值 
+
+生成器
+	生成器是一种特殊的迭代器
+	如果一个函数中有yield语句 那么这就是生成器模板
+	如果在调用该函数的时候 发现函数中有yield那么此时 不是调用函数 而是创建一个生成器对象
+
+
+结论：
+	迭代器：减少内存空间 实现循环
+	生成器：能让函数暂停执行 通过next send唤醒函数执行
+
+greenlet 
+	greenlet是对yield进行封装
+
+
+gevent
+	gevent是对greenlet进行封装
+
+	import gevent
+	from gevent import monkey
+
+	# 有耗时操作
+	monkey.patch_all()
+
+	def f1():
+		print('1')
+		gevent.sleep(0.5)
+
+	def f2():
+		print('2')
+		gevent.sleep(0.5)
+
+	gevent.joinall([
+		gevent.spawn(f1),
+		gevent.spawn(f2)
+
+	])

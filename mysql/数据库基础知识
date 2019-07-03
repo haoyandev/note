@@ -1,0 +1,102 @@
+查看数据库
+show databases
+
+选库
+use databasename
+
+创建数据库
+create database databasename
+
+创建数据库
+create database databasename charset='utf8'
+
+删除数据库
+drop database databasename
+
+查看表
+show tables
+
+删除表
+drop table tablename
+
+修改表名
+rename table oldname to newname
+
+清空表数据
+truncate tablename
+
+	truncate相当于删表再重建在于一张同样结构的表 操作后得到一张全新表
+	而delete是从删除所有的层面来操作的
+	Trucate相当于把旧的学籍表扔了重画一张
+	Delete相当于用橡皮把学籍表的数据库擦掉
+	如果决定全清空的下 truncate速度更快一些
+
+查看表结构
+desc tablename
+
+增删改查基本语法学习
+
+增：insert
+insert 3问
+1、插入哪张表
+2、插入哪几列
+3、插入什么值
+
+insert into tablename （列1，列2，...列n）values（值1，值2，...值n）
+
+改：update
+update 4问
+1、改哪张表
+2、改哪几列的值
+3、分别改为什么值
+4、条件
+
+updata tablename set 列1=新值1 where expr
+
+删：delete
+detele 2问
+1、从哪张表删除数据
+2、要删哪些行
+
+delete from tablename where expr
+
+查：select
+select 3问
+1、查哪张表的数据
+2、查哪些列的数据
+3、差哪些行的数据
+
+select 列1，列2，列3 from tablename where expr
+
+建表
+	**建表其实就是一个画表头的过程
+
+修改表
+	1、增加列
+	alter table tablename add 列名称 列类型 列参数
+	2、删除列
+	alter table tablename drop 列名
+	3、修改列类型
+	alter table tablename modify 列名 新类型 新参数
+	4、修改列名
+	alter table change 旧列名 新列名 新类型 新参数
+
+group by a,b,c 为列,则select的列,只能在a,b,c里选择,语义上才没有矛盾
+
+order by 结果集中的列名desc降序/asc升序（默认）
+
+视图的创建语法
+create view 视图名 as select 语句
+
+视图的删除语法
+drop view 视图名
+
+事务
+	开启事务 begin
+	
+	事务结束 end transaction
+
+	提交事务 commit
+	
+	回滚事务 rollback
+	

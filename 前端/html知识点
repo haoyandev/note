@@ -1,0 +1,196 @@
+1、内核分为渲染内核和js内核
+
+	渲染内核
+	Trident(IE)
+
+	Gecko(firefox)
+
+	webkit(Safari)
+
+	chromium/Blink(Chrome)
+
+	Persto/Blink(Opera)
+
+2、为什么要有语义化标签？
+	1）方便代码的阅读和维护
+	2）同时让浏览器或是网络爬虫可以很好地解析 从而更好地分析其中的内容
+	3）使用语义化标签会具有更好地搜索引擎优化
+
+3、h1一般给logo用的
+
+4、文本格式化标签
+	标签                          显示效果
+	<b></b><strong></strong> 	加粗 html推荐使用strong
+	<i></i><em></em>			斜体 html推荐使用em
+	<s></s><del></del>			加删除线 html推荐使用del
+	<u></u><ins></ins>			加下划线 html不赞成使用u
+
+b i s u 只有只用的意思 没有强调的意思 strong em del ins语义更强烈
+
+5、base标签
+	可设置整天链接的打开状态
+	<base target="_blank">
+
+6、特殊字符
+		空格 &nbsp;
+		<    &lt;
+		>    &gt;
+
+7、注释标签
+	<!-- -->
+
+8、表格
+	<table>
+		<caption>表主体</caption>
+		<thead>
+			<tr>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+
+	border 边框
+	cellspacing 单元格与表格之间的空白间距
+	cellpadding 单元格内容与单元格边框之间的空白间距
+	align 表格在页面中的水平对齐方式 left center right
+
+	rowspan 跨行
+	colspan 跨列
+
+9、表单
+	form 表单域
+		<form action="要提交的网址" method="提交方式" name="表单名"></form>
+
+	控件
+		input
+			type
+				text 文本输入框
+				<input type="text" />
+
+				password 密码输入框
+				<input type="password" />
+
+				radio 单选框
+				如果是一组 通过相同name值来实现
+				<input type="radio" name="sex" />男 <input type="radio" name="sex" />女
+
+				checkbox 复选框
+				<input type="checkbox" name="hobby" />篮球 <input type="checkbox" name="hobby" />足球
+
+				button 普通按钮
+				<input type="button" value="搜索" />
+
+				submit 提交按钮
+				<input type="button" value="提交" />
+
+				reset 重置按钮
+				<input type="reset" value="重置" />
+
+				image 图片按钮
+				<input type="image" value="搜索" src="" />
+
+				file 文件按钮
+				<input type="file" /> 
+
+		textarea 文本域
+			<textarea></textarea>
+
+		select 下拉框
+			<select>
+				<option selected="selected"></option>
+				<option></option>
+			<select>
+	属性
+		checked
+			checked="checked" 默认选中
+
+		value 
+			input控件中的默认文本值
+
+		maxlength
+			允许输入多少个字
+
+	label
+		label标签为input元素定义标注
+		作用：用于绑定一个表单元素 当点击label标签的时候 被绑定的表单元素就会获得输入焦点
+		1、用label直接包裹
+			<label><input type="text" /></label>
+		2、通过for id
+		<label for="two"></label>
+		<input type="text" id="one" />
+		<input type="text" id="two" />
+
+10、新增标签
+	<header></header>
+
+	<nav></nav>
+
+	<footer></footer>
+
+	<active></active>
+
+	<datalist id="name">
+		<option></option>
+	</datalist>
+		<input text="text" list="name" />
+
+	<fieldset>
+		<legend>用户登录</legend>
+
+	</fieldset>
+
+11、新增属性
+	placeholder
+		文本框的占位符
+
+	autofocus
+		自动获得焦点
+
+	multiple
+		多文件上传
+
+	autocomplete
+		值：
+			on 
+			off
+		自动记录完成
+		注：
+			1、首先要提交过
+			2、这个表单控件必须要有名字
+
+	required
+		不能为空
+
+	accesskey
+		快捷键获得焦点
+		accesskey="s"
+		alt+s即获得焦点	
+
+12、多媒体标签
+	embed 视频
+	audio 音频
+		autoplay="autoplay" 自动播放
+		controls 是否显示控件
+		loop="-1" or loop 循环播放 loop='2' 循环2次
+
+		兼容
+			一般只做ogg和MP3
+			<audio>
+				<source></source>
+				<source></source>
+				您的浏览器不支持HTML音频播放器
+			</audio>
+
+	video 小视频
+		兼容
+			<audio>
+				<source></source>
+				<source></source>
+				您的浏览器不支持HTML视频播放器
+			</audio>
+

@@ -1,0 +1,52 @@
+1 创建django项目
+	终端 django-admin startproject projectname
+
+2 创建django应用
+	cd项目
+	python manage.py startapp appname
+
+3 配置setting
+	1）设置TEMPLATES里的'DIRS' 添加模板目录templates的路径
+	        'DIRS': [os.path.join(BASE_DIR, 'templates')]
+	
+	2）配置数据库为mysql
+		DATABASES = {
+		    'default': {
+			    'ENGINE': 'django.db.backends.mysql',    使用哪种数据库
+			    'NAME':'dbname',    数据库名
+			    'USER': 'root',		用户名
+			    'PASSWORD': 'xxx',	密码
+			    'HOST': '',			主机号
+			    'PORT': '',			端口号
+			    }
+		    }
+
+		** 在项目中的init文件添加以下代码
+			import pymysql
+			pymysql.install_as_MySQLdb()
+	
+		
+
+	3）在INSTALLED_APPS添加APP应用名称
+		INSTALLED_APPS = [
+	    'django.contrib.admin',
+	    ....
+	    'blog.apps.appname', # 注册APP应用
+		]
+
+
+
+	4）修改项目语言和时区
+		LANGUAGE_CODE = 'zh-hans' #语言修改为中文
+		TIME_ZONE = 'Asia/Shanghai'
+
+
+	5）配置静态文件路径
+		STATIC_URL = '/static/'     url匹配到以/static/开头的请求就会主动寻找静态文件目录
+		# 静态文件目录
+		STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+	6）若app比较多 需要创建一个apps目录进行管理 添加apps路径
+		sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
+
+		

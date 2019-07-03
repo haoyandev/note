@@ -1,0 +1,178 @@
+django的请求生命周期?
+	答案一：
+		前端请求—>nginx—>uWSGI—>中间件—>url路由—->view视图—>orm—->拿到数据返回给view—->视图将数据渲染到模版中拿到字符串—->中间件—>uWSGI—->nginx—->前端渲染
+
+	答案二：
+		请求 --> 中间件 --> 视图(如果是CBV 走到dispatch通过反射返回)
+
+	答案三：(含rest_framework)
+
+赋值 浅拷贝 深拷贝的区别?
+	赋值:赋值其实就是对象的引用。当创建一个对象，把它赋值给另一个变量的时候，python并没有拷贝这个对象，只是拷贝了这个对象的引用而已。
+
+	浅拷贝：拷贝了最外围的对象本身，内部的元素都只是拷贝了一个引用而已。也就是，把对象复制一遍，但是该对象中引用的其他对象我不复制
+
+	深拷贝：外围和内部元素都进行了拷贝对象本身，而不是引用。也就是，把对象复制一遍，并且该对象中引用的其他对象我也复制。
+
+map的作用
+	map()它接收一个函数f和一个可迭代对象(这里理解成 list)，并通过把函数f依次作用在list的每个元素上，得到一个新的list并返回
+	**如果传入的函数为None，返回的对象是不可以调用的
+
+内置库
+
+
+
+Python里面的match()和search()的区别？
+	re模块中的match(pattern,string[,flags])，检查的是string的开头是否与pattern匹配
+	re模块中的search(pattern,string[,flags])，在string搜索pattern的第一个匹配值。
+
+什么是wsgi uwsgi uWSGI?
+	WSGI：是一种描述web server如何与web application通信的规范。
+
+	uwsgi：uwsgi是一种线路协议，并非是通信协议，常用于在uWSGI服务器与其他网络服务器的数据通信。
+
+	uWSGI：是一个web服务器，实现了WSGI协议、uwsgi协议、http协议等。
+
+	nginx的作用： 
+		1.反向代理，可以拦截一些web攻击，保护后端的web服务器 
+		2.负载均衡，根据轮询算法，分配请求到多节点web服务器 
+		3.缓存静态资源，加快访问速度，释放web服务器的内存占用，专项专用
+
+		uWSGI的适用： 
+		1.单节点服务器的简易部署 
+		2.轻量级，好部署
+	
+		browser --> nginx --> (uwsgi协议) --> uWSGI -->(WSGI协议) --> Django
+
+		1, nginx是对外的服务器，外部浏览器通过url访问nginx, uWSGI是对内的服务器，主要用来处理动态请求。
+
+		2, nginx接收到浏览器发送过来的http请求，将包进行解析，分析url， a.如果是静态文件请求就直接访问用户给nginx配置的静态文件目录，直接返回用户请求的静态文件， b.如果不是静态文件，而是一个动态的请求，那么nginx就将请求转发给uWSGI,
+
+		 uwsgi接收到请求之后将包进行处理，处理成wsgi可以接受的格式，并发给wsgi,
+		 wsgi根据请求调用应用程序的某个文件，某个文件的某个函数，最后处理完将
+		 返回值再次交给wsgi,wsgi将返回值进行打包，打包成uwsgi能够接收的格式，
+		 uwsgi接收wsgi发送的请求，并转发给nginx,nginx最终将返回值返回给浏览器。
+
+简述什么是FBV和CBV？
+		django中请求处理方式有2种：FBV 和 CBV 
+		FBV（function base views） 就是在视图里使用函数处理请求。 
+		CBV(class base views)  就是在视图里使用类处理请求 类需要继承View
+
+FVB方式请求的过程
+	用户发送url请求,Django会依次遍历路由映射表中的所有记录,一旦路由映射表其中的一条匹配成功了,
+	就执行视图函数中对应的函数名,这是fbv的执行流程
+
+CVB方式请求的过程
+	当服务端使用cbv模式的时候,用户发给服务端的请求包含url和method,这两个信息都是字符串类型
+
+	服务端通过路由映射表匹配成功后会自动去找dispatch方法,然后Django会通过dispatch反射的方式找到类中对应的方法并执行
+
+django的request对象是在什么时候创建的？
+	当请求一个页面时，Django会建立一个包含请求原数据的 HttpRequest 对象。 当Django 加载对应的视图时，HttpRequest 对象将作为视图函数的第一个参数。每个视图会返回一个HttpResponse 对象。
+
+
+如何给CBV的程序添加装饰器？
+	from django.views import View
+   	from django.utils.decorators import method_decorator
+ 
+	  	def auth(func):
+	      	def inner(*args,**kwargs):
+	          	return func(*args,**kwargs)
+	      	return inner
+	 
+	  	class UserView(View):                       
+	      	@method_decorator(auth)
+	      	def get(self,request,*args,**kwargs):
+	          	return HttpResponse('...')
+
+
+csrf是什么和django中csrf的实现机制？
+	csrf --> 跨站请求伪造
+	Django预防CSRF攻击的方法是在用户提交的表单中加入一个csrftoken的隐含值，这个值和服务器中保存的csrftoken的值相同，这样做的原理如下:
+		1 渲染模板文件时在页面生成一个名字叫做csrfmiddlewaretoken的隐藏域
+		2 服务器交给浏览器保存一个名字为csrftoken的cookie信息
+		3 提交表单时 两个值都会发给服务器 服务器进行比对 如果一样 则csrf验证通过 否则失败
+
+	具体配置如下：
+
+	template中添加{%csrf_token%}标签
+
+django的缓存能使用redis吗？如果可以的话，如何配置？
+在settings.py 里面添加
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        },
+    },
+}
+
+django路由系统中name的作用？
+	name 可以用于在 templates, models, views ……中得到对应的网址，相当于'给网址取了个小名'，只要这个名字不变，网址变了也能通过名字获取到。
+
+
+什么是Nginx？
+	是一个使用c语言开发的高性能的http服务器及反向代理服务器。
+
+
+django中间件
+	- process_request
+	- process_view
+	- process_response
+	- process_exception
+	- process_render_template
+	使用中间件做过什么？
+	- 权限
+	- 用户登陆验证
+	- django的csrf是如何实现？
+		process_view方法
+			- 检查视图是否被@csrf_exempt(免除csrf认证)
+			- 去请求体或cookie中获取token
+
+	CBV小知识 csrf时需要使用
+		- @method_decorator(csrf_exempt)
+		- 在dispatch方法中(单独方法无效)
+
+		方法一：
+			@method_decorator(csrf_exempt, name='dispatch')
+			class MyView(View):
+				pass
+		方法二：
+			class MyView(View):
+				def dispatch(self, request, *args, **kwargs):
+					pass
+
+CBV总结
+	- 本质：基于反射来实现
+	- 流程：路由 --> view --> dispatch(反射)
+	- 取消csrf认证(装饰器要加到dispatch方法且method_decorator装饰)
+
+	扩展：
+		- csrf
+		 - 基于中间件的process_view方法
+		 - 装饰器给单独函数进行设置(认证或者不认证):@csrf_exempt
+
+谈谈你对RESTful api规范的认识？
+	  	本质：
+	  		是一个规范 让我们设计api的时候更好的去区分 让我们后台更容易去处理 并且让前端更容易记住这些url 在这些url体现出api的一些操作
+	  	没用之前：
+	  		用get post delete put都能够实现 但url要保存很多个
+		使用之后：
+		  	学了RESTful之后 渐渐地去使用它 不过在实际开发中 有一些适用 有一些不适用 因为我们网站中很多不用https协议
+		列举：
+		  	比较简单的有...
+		总结：
+		  	说白了 这个RESTful就是一个规范 遵循这个规范 只不过大家相互之间各自都知道应该去哪取哪些值 明确这个规范 在开发的时候就更加统一
+		注意：
+			推荐使用CBV
+
+面向对象的理解？
+	封装
+		分为两部分 一部分是把相同的一大堆方法和属性封装到类里面 一部分通过构造方法将一部分数据封装到对象里面去 起到打包的作用
+	继承
+		如果有两个类或者多个类 其中有相同的属性和方法 就可以提取到基类里面实现 多继承先从左边找再到右边找(广度优先)
+		知识点：广度优先 深度优先 经典类和新式类
+	多态
+		给我一个对象 只要能.(点方法)出来方法就表示支持我的功能

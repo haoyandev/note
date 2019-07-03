@@ -1,0 +1,273 @@
+1 djang默认的认证系统 AbstractUser
+
+导入AbstractUser类
+创建用户模型类
+
+class User(AbstractUser, BaseModel):
+	"""用户模型类"""
+	class Meta:
+		db_table = 'df_user' # 映射到数据库对应的表名
+		verbose_name = '用户' # 映射到管理页面对应的表名
+		verbose_name_plural = verbose_name
+
+在settings中配置
+# django认证系统使用的模型类
+AUTH_USER_MODEL = 'user.user'   # python manage.py create superuser 也是通过这个用户类创建
+
+
+系统验证类的方法
+from django.contrib.auth import authenticate, login, logout
+**
+create_user --> 创建用户    create_user(username, email, password) 创建后的用户默认是is_active
+authenticate --> 登陆验证 # 自动把密码转码成base64      user = authenticate(username=username, password=password) or None
+login --> 记住登陆信息:保存session信息   login(request, user)
+logout --> 退出用户登陆:删除session信息  logout(request, user)
+is_authenticated --> 判断用户是否登陆    user.is_authenticated() 返回True or False
+login_required装饰器 --> 进行登陆判断    
+
+@login_required
+** 如果用户还没有登录，默认会跳转到'/accounts/login/' 这个值可以在settings文件中通过LOGIN_URL参数来设定
+** 后面还会自动加上你请求的url作为登录后跳转的地址，如： /accounts/login/?next=/polls/3/ 登录完成之后，会去请求/poll/3）
+
+@login_required结合类视图
+class LoginRequiredMaxin(object):
+    @classmethod
+    def as_view(cls, **initkwargs):
+        # 调用父类as_view方法
+        view = super().as_view(**initkwargs)
+        return login_required(view)
+
+
+2 用户注册
+**  收集数据
+	校验数据
+	业务处理
+		** 加密用户信息
+		选择itsdangerous
+			pip install itsdangerous
+			from itsdangerous import JSONWebSignatureSerializer as Serializer
+			from itsdangerous import SignatureExpired
+			使用django内部的secret_key
+			from django.conf import settings
+			serializer = Serializer(settings.SECRET_KEY, expires_in)
+			token = serializer.dumps() 返回的是byte类型
+			token = token.decode()
+			serializer.loads()
+	返回应答
+
+
+3 发邮件
+** 在settings.py中配置
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# smtp服务的邮箱服务器 我用的是163
+EMAIL_HOST = 'smtp.163.com'
+# smtp服务固定的端口是25
+EMAIL_PORT = 25
+#发送邮件的邮箱
+EMAIL_HOST_USER = 'haoyanpy@163.com'
+#在邮箱中设置的客户端授权密码
+EMAIL_HOST_PASSWORD = 'yan90000009'
+#收件人看到的发件人 <此处要和发送邮件的邮箱相同>
+EMAIL_FROM = '天天生鲜<haoyanpy@163.com>'
+
+	celery
+	任务发出者 --- 中间人(broker) --- 任务处理者
+
+	**定义任务
+		在项目中建立名为'celery_task'的目录 再创建一个叫task的py文件
+
+from celery import Celery
+from django.conf import settings
+from django.core.mail import send_mail
+import os
+import django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dailyfresh.settings')
+django.setup()
+# 创建一个celery类的实例对象
+app = Celery('celery_tasks.tasks', broker='redis://127.0.0.1:6379/0')
+
+
+# 发送邮件函数
+@app.task
+def send_register_active_email(username, to_email, token):
+    # 标题
+    subject = '天天生鲜欢迎信息'
+    # 内容
+    message = ''
+    # 发送人
+    sender = settings.EMAIL_FROM
+    # 收件人
+    receiver = [to_email]
+
+    # html内容
+    html_message = '<h1>{},欢迎你成为天天生鲜注册会员</h1>请点击以下链接完成激活</br><a href="http://127.0.0.1:8000/user/active/{}">激活</a>'.format(
+        username, token, token)
+    print(html_message)
+    send_mail(subject, message, sender, receiver, html_message=html_message)
+    send_mail()
+
+ 应用中发送任务:
+ 	send_register_active_email.delay(username, to_email, token)
+
+ 启动worker
+ 	**在worker的电脑中也需要任务的代码
+ 	**需要安装celery
+ 	**进入项目中 celery -A celery_task.task worker -l info  \  -l info现实日志信息
+
+
+ 4 配置redis作为django缓存和session后端
+
+ 	安装django-redis
+ 		pip install django-redis
+
+**在settings.py中配置
+
+
+# 缓存
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        },
+    },
+}
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
+
+# 使用django-redis存储session
+***安装 django-redis-sessions
+SESSION_ENGINE = 'redis_sessions.session'
+SESSION_REDIS_HOST = 'localhost'
+SESSION_REDIS_PORT = 6379
+SESSION_REDIS_DB = 4
+SESSION_REDIS_PASSWORD = ''
+SESSION_REDIS_PREFIX = 'session'
+
+
+5  模型管理类和模型类
+	模型管理类               继承		
+	(AddressManager)        ---->  model.Manager
+	内置self.model属性指向
+	object所在的类里面的类名
+
+	模型类                   继承
+	(Address)               ---->  model.Model
+	object=AddressManager()
+
+class AddressManager(models.Manager):
+    """地址模型管理器"""
+    def get_default_address(self, user):
+        try:
+            address = self.get(user=user, is_default=True)
+        except self.model.DoesNotExist:
+            address = None
+        return address
+
+6 fastFDS
+**特点
+	海量存储 存储容量扩展方便
+	防止文件内容重复
+	结合nginx提高网站访问图片的效率
+
+
+7 自定义存储类
+
+	存储类中必须实现_open()和_save()方法，以及任何后续使用中可能用到的其他方法。
+
+		_open(name, mode='rb')
+
+			被Storage.open()调用，在打开文件时被使用。
+
+		_save(name, content)
+
+			被Storage.save()调用，name是传入的文件名，content是Django接收到的文件内容，该方法需要将content文件内容保存。Django会将该方法的返回值保存到数据库中对应的文件字段，也就是说该方法应该返回要保存在数据库中的文件名称信息。
+
+		exists(name)
+
+			如果名为name的文件在文件系统中存在，则返回True，否则返回False。
+
+		url(name)
+
+			返回文件的完整访问URL
+
+		delete(name)
+
+			删除name的文件
+
+		listdir(path)
+
+			列出指定路径的内容
+
+		size(name)
+
+			返回name文件的总大小
+
+	在utils目录下创建fdfs目录
+		复制client.conf配置文件
+
+
+from django.core.files.storage import Storage
+from fdfs_client.client import Fdfs_client
+from django.conf import settings
+class FDFSStorage(Storage):
+    """自定义存储类"""
+    def __init__(self, client_conf=None, base_url=None):
+    	#初始化
+    	if client_conf is None:
+    		self.client_conf = settings.FDFS_CLIENT_CONF
+    	self.client_conf = client_conf
+    	if base_url is None:
+    		self.base_url = settings.FDFS_URL
+    	self.base_url = base_url
+
+    def _open(self, name, mode='rb'):
+        """打开文件时使用 """
+        pass
+
+    def _save(self, name, content):
+        # name 你选择上传文件的名字
+        # content 包含你上传内容的file对象
+
+        # 创建fdfs_client对象
+        client = Fdfs_client(self.client_conf)
+
+        # 上传文件
+        # content.read() 读取文件内容
+        res = client.upload_by_buffer(content.read())
+
+        	#dict
+        	#{
+        	#	'Group name': group name,
+        	#	'Remote file_id': remote_file_id,
+        	#	'Status': 'Upload success',
+        	#   'Upload size': upload_size,
+        	#	'Storage IP': storage_ip
+        	#}
+        	#
+
+        # 判断是否成功
+        if res.get('Status') != 'Upload successed.':
+            raise Exception('上传fdfs文件失败')
+
+        filename = res.get('Remote file_id')
+        return filename
+
+    def exists(self, name):
+        return False
+
+    def url(self, name):
+        return self.base_url +name
+
+# 设置django的文件存储类
+DEFAULT_FILE_STORAGE = 'utils.fdfs.storage.FDFSStorage'
+
+# 设置fdfs使用的client.conf文件路径
+FDFS_CLIENT_CONF = './utils/fdfs/client.conf'
+
+# 设置fdfs存储服务器上nginx的ip和端口号
+FDFS_URL = 'http://127.0.0.1:8000/'

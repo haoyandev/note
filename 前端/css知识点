@@ -1,0 +1,552 @@
+1、font
+	字体
+	常用技巧
+		1、网页中普遍使用14px; 浏览器默认字体是16px
+		2、尽量使用偶数的数字字号
+		3、各种字体之间必须使用英文逗号隔开
+		4、中文字体需要加英文引号 英文字体一般不需要加引号 
+	以后尽量写unicode字体 写宋体和微软雅黑
+
+2、注释
+	/*
+
+	 */
+
+3、font-weight
+	字体粗细
+	值：
+		normal 正常 400
+		bold 加粗 700
+
+4、font-style
+	字体样式
+	值：
+		normal 正常字体
+		italic 斜体
+
+5、font综合 
+	选择器 {
+		font： font-style font-weight font-size/line-height font-family;
+	}
+	注：
+		不需要设置的属性可以省略 但必须保留font-size和font-family属性
+
+6、css命名规范
+	a 长名词或词组可以使用中横线来为选择器命名
+	b 不建议使用"_"下划线来命名
+	c 不能使用纯数字、中文等命名
+
+7、规范手册
+	https://files-cdn.cnblogs.com/files/miss-carrie/09Web%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83%E6%89%8B%E5%86%8C.pdf
+
+8、通配选择器
+	* 匹配所有
+
+9、伪类选择器
+	用于向某些选择器添加特殊效果
+	类选择器一个.
+	伪类选择器两个.
+
+	链接伪类选择器
+		:link 未访问
+		:visited 已访问
+		:hover 鼠标悬停
+		:actice 选定的链接
+
+	按顺序
+		l v h a
+
+10、结构选择器
+	：first-child
+	：last-child
+	：nth-clild(n) even偶数 odd奇数 n从0开始 2n
+	：nth-last-child(n) 从最后一个孩子开始数
+
+11、目标伪类选择器
+	
+	<a herf='#idname'></a> -> 跳到对应的id元素
+	：target {
+		选取当前活动的目标元素 的 css
+	}
+	
+
+12、css外观属性
+	color 字体颜色
+	line-hight 行高
+	text-align 水平对齐方式 left center right
+	text-index 首行缩进 建议使用em做单位 1em就是一个汉字的宽度
+	letter-spacing 字间距
+	word-spacing 单词间距
+
+13、半透明
+	color: rgba(r,g,b,a) a: 0~1
+
+14、文字阴影
+	text-shadow：水平位置 垂直位置 模糊位置 阴影颜色
+		前两个参数必须写
+
+15、外部样式表
+	<link rel="stylesheet" href="" type="text/css"> 
+
+16、标签显示模式
+	块级元素
+		每个块级元素都独占一行 可以对其设置宽度、高度、对其方式 常用于网页布局
+	行内元素
+		不占有独立区域 仅靠自身的字体大小和图像尺寸来支撑结构 一般不可以设置宽度、高度、对齐方式
+
+	注：
+		链接里面不能放链接
+		p h1~h6 dt 都是文字类的块元素 里面不能放其他块级元素
+
+	块级元素的特点：
+		1、总是从新行开始
+		2、高度、行高、外边距以及内边距都可以控制
+		3、宽度默认是容器100%
+		4、可以容纳内联元素和其他块元素
+
+	行内元素的特点：
+		1、和相邻的行内元素在一行上
+		2、高宽无效 但水平padding margin有效 垂直方向的无效
+		3、默认宽度就是它本身内容的宽度
+		4、只能容纳文本或则其他行内元素 a特殊
+
+	行内块元素：
+		1 img input td 可以对他们设置宽高
+		2 和相邻行内元素(行内块)在一行上 但是之间会有空白间隙
+		3 默认宽度就是本身内容的宽度
+		4 宽高 行高 外边距以及内边距都可以控制
+
+17、css复合选择器
+	交集选择器
+		标记选择器+类别选择器
+		h3.class 不能有空格 既...又...
+
+	并集选择器
+		div, p ,span {}
+
+	后代选择器
+		可以选择儿子 孙子 重孙子
+		div p{}
+
+	子元素选择器
+		只可以选择儿子
+		div>p{}
+
+	属性选择器
+		a[title] 存在attr属性即可
+		a[title=val] 属性值完全等于val
+		a[title*=val] 包含val
+		a[title^=val] 开头有val
+		a[title$=val] 结尾有val
+
+	伪元素选择器
+		p::first-letter
+		p::fisrt-line
+		p::selection
+
+		p::before{
+			content:""
+		}
+		p::after{
+			content:""
+		}	
+			注：
+				盒子内部插入内容
+
+18、背景
+	background-color：rgba(0,0,0,0.6)
+	background-image：url()
+	background-repeat
+	background-position: 
+		1 利用方位词 
+			left center top right bottom 如果方位名词只写一个 另外一个默认为center
+		2 精确单位
+			xxpx, xxpx;
+		3 混搭
+			center 10px;
+	background-attachment：scroll(默认滚动) fixed固定
+	background-size：宽度 高度; 尽量只改一个值 会自动等比缩放
+				   ：cover 图片会进行等比例缩放 图片一定保证宽度和高度同时满足盒子的大小 如有溢出则被隐藏 用得比较多
+				   ：contain 会自动等缩放比例 如果图片的宽度和高度有一个和盒子一样大了 就不再缩放 保证了图片的完整 不会有缺失的一部分 但是会有裸露的部分
+		我们插入的img直接通过width和height设置就可
+		背景图片的大小通过background-size设置
+	background：颜色 地址 是否平铺 是否滚动 背景位置
+	多背景
+		背景颜色通常放在最后一组
+
+19、文本的装饰
+	text-decoration
+		值：
+			none 默认
+			underline 下划线
+			overline 上划线
+			line-through 穿过文字
+
+20、css三大特性
+	层叠性
+	继承性
+		text-
+		font-
+		line-
+		color
+	优先级 
+		权重
+		值从左到右 左边最大 一级大于一级 数位之间没有进制 级别之间不可超越
+		继承的权重为0
+			*				0,0,0,0
+			标签				0,0,0,1
+			类/伪类/伪元素/属性选择器   		0,0,1,0
+			ID    			0,1,0,0
+			行内样式			1,0,0,0
+			!important		无穷大
+
+21、盒子模型
+	border：border-width || border-style || border-color
+		none	
+		solid	实线
+		dashed	虚线
+		dotted	点线
+		double	双实线
+
+22、表格的细线边框
+	table{
+		border-collapse：collapse;
+	}
+		合并相邻单元格
+
+23、圆角边框
+	border-radius：10px; 一个数值表示四个角
+	border-radius：10px 40px; 左上角和右下角为10px 右上角和左下角为40px
+	border-radius：10px 40px 80px; 左上角10px 右上角和左下角为40px  右下角为80px
+
+24、margin合并
+	外边距合并 垂直的块级盒子 以最大的外边距为准
+
+25、margin塌陷
+	解决方法
+		父级元素加上边框或上内边距
+		overflow：hidden
+
+26、content宽度和高度
+	外盒尺寸计算
+		高度 = content height + padding + border + margin
+		宽度 = content width + padding + border + margin
+	内盒尺寸计算
+		高度 = content height + padding + border
+		宽度 = content width + padding + border
+	注意：
+		1 width和height属性仅适用于块级元素 对行内元素无效(img和input除外)
+		2 计算盒子模型的总高度时 还应该考虑两个盒子垂直外边距合并的情况
+		3 如果一个盒子没有给定宽度/高度或者继承父级的宽度/高度的话 则padding不会影响盒子大小
+
+27、box-sizing属性
+	content-box 标准盒子模型
+	border-box	IE盒子模型
+
+28、盒子阴影
+	box-shadow：水平阴影 垂直阴影 模糊 阴影尺寸 阴影颜色 内部/外部阴影
+	
+29、浮动
+	1 浮动首先先创建包含块的概念 浮动元素总是找离他最近的父级元素对齐 但不会超出内边距的范围
+	2 元素浮动之后具有行内块元素的特性 大小完全取决于定义的大小或者默认的内容多少
+
+30、布局流程
+	1 确定页面的版心
+	2 分析页面中的行模块 以及每个行模块的列模块
+	3 制作html结构
+	4 css初始化 然后运用盒子模型原理 通过DIV+CSS布局来控制网页的各个模块
+
+	相同样式的 一般用并集选择器
+
+31、清除浮动
+	额外标签法 在浮动盒子下面添加一个空盒子 设置clear：both
+	父级添加overflow法  overflow：hidden 触发BFC 可以清除浮动
+	after伪元素 .clearfix {
+		display: block;
+		content: "."; 内容为小点 尽量不要加空 否则旧版本浏览器有空隙
+		height: 0;
+		visibility: hidden;
+		clear: both;
+	}
+
+	.clearfix {
+		*zoom: 1; ie6 ie7
+	}
+
+	双伪元素
+		.clearfix:before, .clearfix:after {
+			content: "",
+			display: table; 清除浮动和margin塌陷
+		}
+
+		.clearfix:after {
+			clear:both;
+		}
+
+		.clearfix {
+			*zoom: 1;
+		}
+
+32、一般符号都用arial字体
+
+33、z-index
+	1、z-index默认属性值是0 取值越大 定位元素在层叠元素中越居上
+	2、如果取值相同 则根据书写顺序 后来居上
+	3、后面数字一定不能加单位
+	4、只有定位元素有此属性 其余标准流 浮动 静态定位都无此属性 亦不可指定此属性
+
+34、四种定位总结
+	定位模式 		是否脱标占位置		是否可以用边偏移		移动位置基准
+	静态定位 		不脱标 正常模式		不可以 				正常模式
+	相对定位			不脱标 占有位置		可以 				相对自身位置移动
+	绝对定位			脱标 不占有位置		可以 				相对于定位父级移动位置(不含border和padding)
+	固定定位			脱标 不占有位置		可以 				相对于浏览器移动位置
+
+35、定位模式转换
+	跟浮动一样 元素添加了绝对定位和固定定位之后 元素模式也会发生转换 都转换为行内块元素
+
+36、元素的显示和隐藏
+	display显示
+		值 ：
+			none隐藏对象但不删除
+			block显示对象
+		特点：
+			隐藏之后 不再保留位置
+
+	visibility可见性
+		值：
+			visible对象可见
+			hidden对象隐藏
+		特点：
+			隐藏之后 继续保留位置(停职留薪)
+
+	overflow溢出
+		值：
+			visible 不剪切内容也不添加滚动条
+			auto 超出自动显示滚动条 不超出不显示
+			hidden 超出部分会隐藏 可以隐藏定位的子元素
+			scroll 不管超出内容否 总是显示滚动条
+			
+37、鼠标样式
+	cursor
+		值：
+			default 白色箭头
+			pointer 手指
+			move 移动(十字架)
+			text 文本
+38、轮廓
+	outline: 0 none取消外边框
+
+39、防止文本域拖拽
+	resize:none;
+
+40、图片和表单与文字垂直对齐
+	vertical-align
+		值：
+			top
+			middle
+			base
+			bottom
+
+41、去除图片底侧空白缝隙
+	图片和表单等行内块元素 它的底线会和父级盒子的基线对齐 这样子底侧会出现空白缝隙
+	解决方法
+		1、display: block 转换为块级元素
+		2、vertical-align:top 用得最多
+
+42、溢出的文字隐藏
+	word-break 只处理英文
+		值：
+			normal
+			break-all 允许在单词内换行
+			keep-all 只能在半角空格或连字符处换行
+
+	white-space 支持汉字
+		值：
+			normal
+			nowarp 强制在同一行显示所有文字
+
+	text-overflow 文字溢出
+		值：
+			clip 不显示省略号 而是简单的裁切
+			ellipsis 当文本溢出时显示省略标志
+		注：
+			一定先要强制一行内显示 再和overflow：hidden搭配使用
+
+43、精灵技术
+	是一种处理网页背景图像的方式 他将一个页面涉及到的所有零星	背景图像都集中到一张大图中 然后用大图应用与网页 这样 当用户访问页面的时候 只需向服务器发送一次请求 网页中的背景图像即可全部展现出来 通常情况下 这个由很多小背景图像合成的大图被称为精灵图
+
+44、字体图标
+	上传生成字体包
+	推荐网站http://www.icomoon.io
+			http://www.iconfont.cn
+
+	第一步：在样式里面声明字体 告诉别人我们自定义的字体 **在html文件里面声明**
+		@font-face {  /*声明字体  引用字体*/
+		    font-family: "icomoon";  /*我们自己起名字可以*/
+		    src:  url('fonts/icomoon.eot?7kkyc2');
+		    src:  url('fonts/icomoon.eot?7kkyc2#iefix') format('embedded-opentype'),
+			  url('fonts/icomoon.ttf?7kkyc2') format('truetype'),
+			  url('fonts/icomoon.woff?7kkyc2') format('woff'),
+			  url('fonts/icomoon.svg?7kkyc2#icomoon') format('svg');
+		    font-style: normal;  /*倾斜字体正常*/
+		}
+
+	第二步：给盒子使用字体
+	第三部：盒子里面添加结构
+
+45、推拉门
+	核心技术：利用css精灵(主要是背景图片)和盒子padding撑开宽度 以便适应不同字数的导航栏
+	一般经典布局：
+		<li>
+			<a>
+				<span></span>
+			</a>
+		</li>
+	总结：
+		1、a设置背景左侧 padding撑开合适宽度
+		2、span设置背景右侧 padding撑开合适宽度 剩下的由字体撑开
+		3、之所以a包含span就是因为整个导航栏都是可以点击的
+
+46、before after
+	类选择器 伪类选择器就是选取对象
+	伪元素选择器 本质上就是插入一个元素(标签 盒子) 行内元素
+
+47、过渡
+	transition：要过渡的元素 花费时间 运动曲线 何时开始
+
+48、变形
+	transform：
+		注：
+			谁做动画 给谁加过渡
+		值：
+			translate(x,y)移动 如果是百分比% 不是以父级宽度为准 是以自己的宽度为准
+			translateX仅水平方向移动
+			translateY仅垂直方向移动
+				加强版盒子居中
+					position:absolute;
+					left:50%;
+					top:50%;
+					transform:translate(-50%,-50%)
+
+			scale(x,y)缩放
+
+			rotate(deg)旋转
+
+				transform-origin 变形中心点：left center
+d  											xxpx  xxpx
+
+				rotateX(deg)
+				rotateY(deg)
+				rotateZ(deg) 普通中心旋转
+			skew()倾斜
+
+49、透视
+	perspective
+		视距 视距越大透视效果越不明显 视距越小透视效果越明显
+
+50、翻转属性
+	backface-visibility:hidden
+		不是正面对着屏幕 就隐藏
+
+51、动画
+	引用动画
+		animation：动画名称 动画时间 运动曲线 何时开始 播放次数 是否反向
+		animation-iteration-count 播放次数 infinite 
+
+	定义动画
+		@keyframes 动画名称{
+			from {
+
+			}
+			to {
+
+			}
+
+		}
+
+52、伸缩
+	父级元素——
+			display: flex;
+	子元素——
+			flex 子项目在主轴的缩放比例 不指定flex属性 则不参与伸缩分配
+	min-width 最小值 
+	max-width 最大值
+
+	flex-direction：
+		值：
+			column 垂直排列
+			row 水平排列
+
+53、justify-content(水平对齐) 作用于父级元素
+	值：
+		flex-start 让子元素从父容器的开头开始排序 但是盒子顺序不变
+		flex-end 让子元素从父容器的结尾开始排序 但是盒子顺序不变
+		center 让子元素在父容器中间显示
+
+		space-between 左右盒子贴近父盒子 中间的平均分布空白间距
+		space-around 相当于给每个盒子添加左右margin外边距
+
+54、align-items(垂直对齐) 作用于父级元素
+	flex-start 上对齐
+	flex-end 底对齐
+	flex-center 垂直对齐
+
+55、flex-warp
+	值：
+		nowarp 不换行 强制在一行内显示
+		warp 自动换行
+
+56、flex-flow
+	是flex-direction和flex-warp的简写方式
+	flex-flow：flex-direction flex-warp
+
+57、引入ico
+	favicon.ico 
+
+	引用图标
+		<link rel="shortcut icon" href="favicon.ico"  type="image/x-icon" />
+
+		注：
+			1、不是iconfont字体
+			2、位置是放在head标签中间
+			3、后面type="image/x-icon" 可以省略
+			4、请将favicon.ico这个图标放在根目录下
+
+58、转换ico
+		http://www.bitbug.net/
+
+59、seo优化
+	title
+		具有不可替代性 是我们内页第一个重要标签 是搜索引擎了解网页的入口和对网页主题归属的最佳判断点
+		标题长度 
+			google 35个中文
+			baidu 28个中文
+		关键字分布
+			最先出现的词语权重越高
+		关键字词频
+			主关键字出现2次
+			辅关键字出现1次
+
+		建议：
+			首页主题：网站名(产品名)-网站介绍
+	description
+		网站的内容摘要 尽量不要超过128个汉子(含空格)
+		<meta name="description" content="" />
+	keyword
+		6~8个 逗号隔开
+		<meta name="Keywords" content="" />
+
+60 BFC
+	触发DFC的条件
+		float属性不为none
+		position为absolute或者fixed
+		display为inline-block table-cell table-caption inline-fixed
+		overflow不为visible
+	特性
+		1 在BFC中 盒子从顶端开始垂直地一个接一个地排序
+		2 盒子垂直方向的距离由margin决定 属于同一个BFC的两个相邻盒子的margin会发生重叠
+		3 在BFC中 每一个盒子的左外边缘(margin-left)会触碰到容器的左边缘(border-left)
+		4 BFC的区域不会与浮动盒子产生交集 而是紧贴浮动边缘
+		5 计算BFC高度时 自然也会检测浮动的盒子高度
+		他是一个独立渲染区域 只有block-level box参与 他规定了内部的block-level box 如何布局 并且与这个区域外部毫不相关

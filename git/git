@@ -1,0 +1,125 @@
+Git
+1 安装git 
+	sudo apt-get git
+
+2 创建一个版本库
+	- 进入需要git管理的工作目录 
+	- 创建版本库 git init
+		
+		** 此时目录下分为工作区 暂存区 版本区三部分
+
+3 版本创建与回退
+
+	1) 使用以下两条命令可以创建一个版本
+
+		- git add filename
+		- git commit -m '版本1'
+
+			**查看版本信息
+			git log
+
+	2) 回到某个版本
+		- git reset --hard HEAD^ or 版本序列号 
+
+			** HEAD^ ---> 上一个版本
+			   HEAD~1 ---> 上一个版本
+
+			** 查看历史版本操作(含序列号)
+				git reflog
+
+4 查看当前工作状态
+	git status
+
+5 撤销修改
+	1）在工作区修改且没有提交
+		git checkout -- filename
+	2）已提交到缓存区
+		git reset HEAD filename --->取消暂存
+		git checkout -- filename  --->取消修改
+	3）已commit
+		版本回退
+
+4 对比文件的不同
+	- 对比工作区中的code.txt 和 HEAD版本中code.txt的不同
+		git diff HEAD -- filename
+		退出 -q
+
+
+	- 对比两个版本间文件的不同
+		git diff HEAD HEAD^ -- filename
+
+5 删除文件
+	**该文件尚未提交到暂存区
+	rm filename（不可恢复）
+	**提交到暂存区
+		- git rm filename（git删除）
+			git commit -m 'info'
+		- rm filename(手动删除)
+			git rm/add filename
+	 		git commit -m 'info'
+
+
+6 简短形式显示日志
+	git log --pretty=oneline --graph(显示合并线)
+
+
+7 分支
+	1)查看分支
+		git branch
+	2)创建分支
+		git branch dev(分支名)
+	3)切换分支
+		git checkout dev
+	4)创建并切换分支
+		git checkout -b dev
+	5)切换主分支
+		git checkout master
+	6)合并分支
+		git merge dev(分支名)
+	7)删除分支
+		git branch -d dev
+	8)禁止快速模式合并
+		git merge --no-ff -m '版本信息'
+
+8 bug修复
+	1) 保存工作现场
+		git stash
+	2) 切换到bug分支 创建临时分支处理bug
+		git checkout -b bug_001
+	3) 处理完bug后 调回master 合并分支
+		git checkout master
+		git merge --no-ff -m '修复bug_001'
+	4) 删除临时分支
+		git branch -d 'bug_001'
+	5) 恢复现场
+		切换分支
+		git checkout dev
+		查看保存的工作现场
+		git stash list
+		恢复工作现场
+		git stash pop
+
+8) 冲突 
+	两条分支修改同一个文件并且提交到版本区
+
+
+
+Github
+	本地与GitHub仓库连接
+		1)修改隐藏目录.gitconfig中的email和name
+		2)生成秘钥
+			ssh-keygen -t rsa -C '邮箱地址'
+		3)GitHub添加ssh密钥
+		4)克隆项目
+			git clone 项目地址
+		5)推送代码到GitHub
+			git push origin 分支名
+
+9 将本地分支跟踪服务器分支
+	git branch --set-upstream-to=origin/远程分支名称 本地分支名称
+
+10 从远程分支上拉取代码
+	git pull origin 分支名
+
+11 推送分支
+	git push origin 分支名

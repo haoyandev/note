@@ -1,0 +1,31 @@
+虚拟环境
+	虚拟环境是真实python环境的复制版本
+
+安装虚拟环境的命令
+1)  # 安装虚拟环境
+	sudo pip install virtualenv 
+2)	# 安装虚拟环境扩展包
+	sudo pip install virtualwrapper
+3) # 编辑家目录下的.bashrc文件 添加一下两行
+	export WORKON_HOME=$HOME/.virtualenvs   # 创建的虚拟环境目录
+	source /usr/local/bin/virtualenvwrapper.sh
+4)立即生效
+	source ~/.bashrc
+5)创建虚拟环境
+	mkvirtualenv -p python envname
+6)进入虚拟环境
+	workon envname
+7)查看极其上有多少个虚拟环境
+	workon 空格 + 两个tab
+
+注**.bashrc文件的作用
+	主要保存个人的一些个性化设置，如命令别名、路径等。下面是个例子：
+	 # User specific aliases and functions
+	 PATH="/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
+	 LANG=zh_CN.GBK
+	 export PATH LANG
+
+	 alias rm='rm -i'
+
+	 **export 
+	 把本地变量变成全局变量

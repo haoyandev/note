@@ -1,0 +1,27 @@
+RESTful规范
+	1、 根据method不同做不同的操作，实例：
+	基于FBV
+		urlpatterns = {
+			url(r'order/', views.order)
+		}
+
+			def order(request):
+				if request.method == 'GET':
+					pass
+				elif request.method == 'POST':
+					pass
+				elif request.method == 'PUT':
+					pass
+				elif request.method == 'DELETE':
+					pass
+	基于CBV
+		class OrderView(View):
+			def get(slef, request):
+				pass
+			def post(slef, request):
+				pass
+			def put(slef, request):
+				pass
+			def delete(slef, request):
+				pass
+

@@ -1,0 +1,63 @@
+斐波拉契数列
+1 1 2 3 5 8 13 21
+f(n) = f(n-2) + f(n-1)
+
+# 递归
+def fib(n):
+	if n == 0 or n ==1:
+		return 1
+	else:
+		return fib(n-2) + fib(n-1) 
+
+# 迭代器
+class Fibonacci(object):
+	def __init__(self, nums):
+		self.nums = nums
+		self.a = 0
+		self.b = 1
+		self.current = 0
+
+	def __iter__(self):
+		return self
+
+	def __next__(self):
+		if self.current < self.nums:
+			ret = self.a
+			self.a, self.b = self.b, self.a + self.b
+			self.current += 1
+			return ret
+
+# 协程
+def fib(n):
+	a, b = 1, 1
+	current = 0
+	if n == 0 or n == 1:
+		yield 1
+	else:
+		while current < n:
+			n = yield a
+			a, b = b, a+b
+			current += 1
+
+def fibIteration(n, fun):
+	fib_obj = fun(n)
+	while Ture:
+		try:
+			ret = next(fib_obj)
+			print(ret)
+		except StopIteration:
+			break
+
+fibIteration(fib)
+
+# 动态规划
+import numpy as np
+def fib(n):
+	dp_fib = np.zeros(len(n))
+	dp_fib[0:2] = 1
+	if n == 0 or n == 1:
+		return 1
+	else:
+		for i in range(2, len(n)):
+			dp_fib[i] = dp_fib[i-2] + dp_fib[i-1]
+		return dp_fib[n]

@@ -1,0 +1,148 @@
+1 javascript代码的位置
+	script标签里面
+	onclick属性里面
+	a标签里面的href属性里面
+		<a href="javascript:alert();"></a>
+		<a href="javascript:;"></a>
+	外部链接
+		<script type="text/javascript" src=""></script>
+		注
+			script标签一旦用来引入外部js文件就不能在里面写js代码了
+
+2 注释
+/*
+	多行注释
+ */
+
+// 单行注释
+
+3 字面量和变量
+	字面量都是一些不可变的值，可以直接引用
+		比如 1 2 3 4 5 6
+	变量
+		声明变量用var关键字
+			var a;
+			a = 123;
+		可以用变量来对字面量进行描述
+
+4 标志符
+	可以含有字母 数字 _ $
+	首个不能是数字
+	不能使用关键字
+	一般使用驼峰法
+		首字母小写 每个单词的开头字母为大写
+
+5 数据类型
+	指的是字面量的类型
+		在js中有六种数据类型
+			基本类型
+				String 		字符串
+				Number 		数值
+				Boolean 	布尔值
+				Null 		空值
+				Undefined 	未定义
+			引用类型
+				Object 		对象
+5 转义符号
+	\
+
+6 检查类型
+	typeof 
+		typeof 123
+
+7 在js中所有的数值都是Number类型
+	包括 正数和浮点数
+
+	数字的最大值
+		Number.MAX_VALUE
+
+8 将其他类型转换成String
+	方式一
+		- 调用被转换数据类型的toString()方法
+		- 该方法不会影响到原变量 他会将转换的结果返回
+		- 但是注意 null undefined这两个值没有toString()方法
+
+	方式二
+		调用String()方法
+
+9 隐式全局变量
+	声明变量不加var
+	num = 1
+	注：
+		隐式全局变量可以被删除
+		全局变量不可以被删除
+		delete num
+
+10 全局变量和局部变量
+	除了函数定义的变量外 其他都是全局变量
+	js没有块级区域 {} 块级区域里面的变量 外面依然可以访问
+
+11 预解析
+	1 把变量的声明提升到当前作用域的最前面 只会提升声明 不会提升赋值
+	2 把函数的声明提升到当前作用域的最前面 只会提升声明 不会提升调用
+	3 先提 var 再提function
+
+12 创建对象的三种方法
+	1 调用系统的构造函数创建对象
+		var 变量名= new Object();  object是系统的构造函数
+	2 自定义构造函数创建对象(结合第一种和需求通过工厂模式创建对象)
+		function Person (name, age) {
+			this.name = name;
+			this.age = age;
+		}
+
+	per = new Person('阿黄', 12)
+	console.log(per instanceof Person)
+
+		注：
+			new Person()代码执行后会发生：
+				1 在内存中开辟空间(申请一块新的空间) 存储创建新的对象
+				2 把this设置为当前的对象
+				3 设置对象的属性和方法的值
+				4 把this这个对象返回
+
+	3 字面量的方式创建对象
+		var per = {
+			name: 'xiaoming',
+			age: '12',
+			sayHi: function() {
+				console.log('hello, i am' + this.name)
+			}
+		}
+		缺陷：
+			一次性的对象
+
+13 判断变量(对象)是不是属于某个类型
+	变量 instanceof 类型的名字 ---> true / flase
+
+14 函数和构造函数的区别
+	构造函数的函数名首字母是大写
+	function Person(name, age){
+		this.name = name,
+		this.age = age
+	}
+
+15 函数的定义方式
+	命名函数
+		函数如果有名字 就是命名函数
+	匿名函数
+		函数如果没有名字 就是匿名函数 匿名函数不能直接调用
+
+	函数定义
+		- 函数声明 
+			function 函数名(){
+				函数体
+			}
+
+		- 函数表达式
+			把一个函数给一个变量 此时形成了函数表达式
+			var f2 = function() {
+				console.log('hello')
+			}
+
+			注：
+				如果是函数表达式 那么此时前面的变量中存储的就是一个函数 而这个变量就相当于是一个函数 就可以直接调用 就可以直接小括号调用了
+
+		- 函数的自调用
+			(函数体)();
+				

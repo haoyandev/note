@@ -1,0 +1,25 @@
+cookies
+
+	设置cookies需要一个HttpResponse类的对象或者是它的子类 例如HttpResponseRedirect JsonResponse
+
+	**设置
+		obj.set_cookies('key', 'value', max_age='过期时间/s')
+
+	**获取
+		request对象中的COOKIES中
+		request.COOKIES['key']
+
+
+session
+	默认把session信息保存在django_session表中
+
+	**表结构
+		session_key session_data
+		唯一标示码   {'user':'name'}
+
+	设置session: request.session['username']=''
+	获取session: request.session['username']
+	用户发来请求后 django自动取出session_data并保存在request.session
+
+
+

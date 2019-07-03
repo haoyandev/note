@@ -1,0 +1,165 @@
+表设计
+	1 分析出实体 一个实体作为一张表
+	2 分析出每个实体的属性
+	3 分析表之间的关系 
+
+mysql数据库的优化技术
+
+对mysql优化是一个综合性的技术，主要包括
+	1 表的设计合理化（符合三范式 3FN）
+	2 添加适当索引（index）【普通索引 主键索引 唯一索引 全文索引】
+	3 分表技术（水平分割 垂直分割）
+	4 读书分离
+	5 存储过程【模块化编程，可提高速度】
+	6 对mysql配置优化【配置最大并发数my.cnf 调整缓存大小】
+	7 mysql服务器硬件升级
+	8 定时的去清除不需要的数据 定时进行碎片处理（myisam）
+
+
+show status
+
+常用的
+	show status like 'uptime'
+	show status like 'com_select'
+	show status like 'com_insert'
+	show status like 'com_update'
+	show status like 'com_delete'
+
+	# 查看当前连接的数量
+	show status like 'connetions'
+	# 查看慢查询的数量
+	show status like 'slow_queries'
+
+	# 显示慢查询时间
+	show variables like 'long_query_time'
+
+# 修改时间
+set global long_query_time = 0.5
+
+# 显示慢查询次数
+show status like 'slow_queries'
+
+全文索引
+	1 在mysql中fulltext 索引只针对myisam生效
+	2 针对英文生效
+	3 使用方式 match（字段名）against（'关键字'）
+	4 全文索引一个叫停止词 对常用的词和字符不会创建索引
+
+
+查看索引
+	1 desc tablename
+	2 show index from tablename
+	3 show keys from tablename
+
+创建索引
+	主键索引
+		1 create table tablename(
+			id int primary key auto_increment,
+			name varchar(20) not null
+		);
+
+		2 alter table tablename add primary key(id)
+
+	普通索引
+		# 一般来说 普通索引的创建是先创建表 然后再创建普通索引
+		create table tablename(
+			id int unsigned,
+			name varchar(32)
+		)
+		create index 索引名 on 表(列名)
+
+	全文索引
+		略
+
+	唯一索引
+		1 create table tablename(
+			id int primary key auto_increment,
+			name varchar(32) unique,
+		)
+		这时，name列就是一个唯一索引
+		unique字段可以为null 并可以用多个null 如果是具体内容 则不能重复
+		主键字段 不能为null 也不能重复
+		2 create unique index 索引名 on 表名(列名)
+
+删除索引
+	alter table drop index 索引名
+
+	如果删除主键索引
+	alter table 表名 drop primary key
+
+修改
+	先删除 再修改
+
+
+索引的代价
+	1 占用磁盘空间
+	2 对dml操作有影响 变慢
+
+哪些列需要添加索引
+	较频繁的作为查询条件字段应该创建索引
+	select * from tablename where id=''
+
+	唯一性太差的字段不适合单独创建索引 即使频繁作为查询条件
+	select * from tablename where sex='男'
+
+	更新非常频繁的字段不适合创建索引
+
+	不会出现在where子句中字段不该创建索引
+
+	总结
+		1 肯定在where条件中经常使用 
+		2 该字段的内容不是唯一的几个
+		 字段内容不是经常变化
+
+
+以下情况不会使用到索引：	
+	1 如果表中有复合索引（索引作用在多列上）此时我们注意
+		对于创建的多列索引 只要索引 只要查询条件使用了最左边的列 索引一般就会被使用
+
+	2 模糊查询like 开头的字符如果不确定(% or _) 不会使用索引
+	3 如果条件中有or 即使其中有条件带索引也不会使用 换言之 就是要求使用的所有字段必须带索引（尽量避免使用or）
+	4 如果列类型是字符串 那一定要在条件中将数据使用引导号引用起来 否则不使用索引
+	5 如果mysql估计使用全表查询要比使用索引查询要快 则不使用索引
+
+如何查看索引使用的情况
+	show status like 'Handler_read%'
+	Handler_read_key 这个值 越高 说明索引使用率越高
+	Handler_read_rnd_next 这个值越高 说明查询低效
+
+sql语句的小技巧
+1 在使用group by 分组查询分组后 还会排序 可能会降低性能 在group by后增加order by null就可以防止排序
+2 有些情况可以使用join来代替子查询 因为使用join mysql不需要在内存中创建临时表
+
+如何选择mysql的存储引擎
+myisam存储 如果表对事物要求不高 同时是以查询和添加为主的 我们考虑使用myisam存储引擎 比如bbs中的发帖表和回复表
+
+我们应该定时对myisam进行整理
+optimize table tablename;
+
+
+
+innodb存储 对事物要求高 保存的数据都是重要数据 我们建议使用innodb比如订单表 账号表
+
+面试题：
+	myisam和innodb的区别
+
+	1 事务安全
+	2 查询和添加速度
+	3 支持全文索引
+	4 锁机制
+	5 外键(myisam不支持外键)
+	foreign key(列名) reference othertable(列名 )
+
+手动备份数据库(表的)方法
+在终端
+mysqldump -u root -phaoyan 数据库[表名1,表名2] > 文件路径
+
+如何使用备份文件恢复我们的数据
+mysql控制台
+source 文件路径 
+
+
+配置文件的优化
+	1 max_connections = 1000 最大连接数
+	2 query_cache_size = 15M 查询缓存
+	3
